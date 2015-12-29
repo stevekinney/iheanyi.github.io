@@ -5,26 +5,26 @@ tags: django, react, redux, user authentication, django rest framework, drf
 published: false
 ---
 
-In this tutorial I will show how to build a simple user registration and login
+In this tutorial, I will show how to build a simple user registration and login
 form using Django, Django Rest Framework, React, and Redux. For the purpose of
 this tutorial, I won't include the tests in the blog post, but you can find the
 tests in the [GitHub repo](https://github.com/iheanyi/django-react-redux-users-tutorial).
 
 ## Django Project Setup
 
-First, install Django and Django Rest Framework[^1].  
+First, install Django and Django Rest Framework (DFR)[^1].
 
 ```shell
 pip install django djangorestframework
 ```
 
-Then, create a new Django project. 
+Then, create a new Django project.
 
 ```
 django-admin startproject django_react_users_tutorial
 ```
 
-Now we have to add DRF[^2] to the list of installed apps for our new project. `cd` into the newly created Django project and open up the `settings.py` and add `rest_framework` to the `INSTALLED_APPS` setting.
+Now, we have to add DRF to the list of installed apps for our new project. Change into the newly created Django using `cd django_react_users_tutorial` and open up `django_react_users_tutorial/settings.py`. Add `rest_framework` to the `INSTALLED_APPS` setting as shown below.
 
 ```python
 # django_react_users_tutorial/settings.py
@@ -83,7 +83,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'password')
 ```
 
-Let's dissect this code further, shall we? 
+Let's dissect this code further, shall we?
 
 ```python
 class UserSerializer(serializers.ModelSerializer):
@@ -145,9 +145,9 @@ from rest_framework import status
 
 class AccountsTest(APITestCase):
     def setUp(self):
-        # We want to go ahead and originally create a user. 
+        # We want to go ahead and originally create a user.
         self.test_user = User.objects.create_user('testuser', 'test@example.com', 'testpassword')
-        
+
         # URL for creating an account.
         self.create_url = reverse('account-create')
 
@@ -162,7 +162,7 @@ class AccountsTest(APITestCase):
         }
 
         response = self.client.post(self.create_url , data, format='json')
-      
+
         # We want to make sure we have two users in the database..
         self.assertEqual(User.objects.count(), 2)
         # And that we're returning a 201 created code.
@@ -200,8 +200,8 @@ from accounts.serializers import UserSerializer
 from django.contrib.auth.models import User
 
 class UserCreate(APIView):
-    """ 
-    Creates the user. 
+    """
+    Creates the user.
     """
 
     def post(self, request, format='json'):
@@ -246,8 +246,8 @@ Tweak `accounts/views.py` and change up `UserCreate` to the following.
 ...
 
 class UserCreate(APIView):
-    """ 
-    Creates the user. 
+    """
+    Creates the user.
     """
 
     def post(self, request, format='json'):
@@ -396,7 +396,7 @@ class AccountsTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(len(response.data['username']), 1)
-    
+
     def test_create_user_with_no_username(self):
         data = {
                 'username': '',
@@ -450,7 +450,7 @@ username = serializers.CharField(
 ...
 ```
 
-Save this file and run your `manage.py test` again. 
+Save this file and run your `manage.py test` again.
 
 ```
 ......
@@ -492,7 +492,7 @@ class AccountsTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(len(response.data['email']), 1)
-    
+
     def test_create_user_with_no_email(self):
         data = {
                 'username' : 'foobar',
@@ -560,7 +560,7 @@ WSGIPassAuthorization On
 
 Next, we should modify our `test_create_user` method in `accounts/tests.py`
 because we want to create and include the Token upon successful registration of
-a user. 
+a user.
 
 ```python
 ...
@@ -611,8 +611,8 @@ registration[^5].
 from rest_framework.authtoken.models import Token
 
 class UserCreate(APIView):
-    """ 
-    Creates the user. 
+    """
+    Creates the user.
     """
 
     def post(self, request, format='json'):
@@ -635,7 +635,6 @@ and Redux. Feel free to check out the relevant GitHub branch for this part of
 the tutorial [here](https://github.com/iheanyi/django-react-redux-users-tutorial/tree/django-registration).
 
 [^1]: The latest version of Django is 1.9 at the time of this tutorial. Also, make sure you are using [virtualenv](https://virtualenv.readthedocs.org/en/latest/) for this project.
-[^2]: Django Rest Framework.
 [^3]: To me, 32 characters is good enough of a max length for usernames. Feel free to use another length.
 [^4]: http://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication
-[^5]: The official Django Rest Framework documents suggests to use [signals](http://www.django-rest-framework.org/api-guide/authentication/#generating-tokens) for creating tokens, but they aren't my preference. 
+[^5]: The official Django Rest Framework documents suggests to use [signals](http://www.django-rest-framework.org/api-guide/authentication/#generating-tokens) for creating tokens, but they aren't my preference.
